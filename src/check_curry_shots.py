@@ -8,13 +8,10 @@ Checks:
 Writes data_checks/curry_reconciliation.csv and prints PASS/FAIL.
 """
 
-from pathlib import Path
-
 import pandas as pd
 
-ROOT = Path(__file__).resolve().parents[1]
-RAW = ROOT / "data" / "raw"
-OUT = ROOT / "data_checks"
+from nba_common import CHECKS as OUT
+from nba_common import RAW
 
 
 def main() -> None:

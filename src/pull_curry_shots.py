@@ -3,56 +3,20 @@
 Output:
   data/raw/curry_shots.csv           one row per shot attempt
   data/raw/curry_official_totals.csv official per-season totals (for reconciliation)
-  data/nba.db                        SQLite database with tables `shots` and `official_totals`
+  data/nba.db                        SQLite tables `curry_shots` and `curry_official_totals`
 """
 
 import sqlite3
 import time
-from pathlib import Path
 
 import pandas as pd
 from nba_api.stats.endpoints import playercareerstats, shotchartdetail
 
+from nba_common import DB_PATH, HEADERS, RAW, call_with_retry, season_label
+
 CURRY_ID = 201939
 FIRST_SEASON_START = 2009   # 2009-10 rookie season
 LAST_SEASON_START = 2025    # 2025-26, the last completed season
-
-ROOT = Path(__file__).resolve().parents[1]
-RAW = ROOT / "data" / "raw"
-DB_PATH = ROOT / "data" / "nba.db"
-
-# NBA.com silently hangs on requests that don't look like they come from its own website,
-# so send the same headers a browser on nba.com would.
-HEADERS = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
-                  "(KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
-    "Accept": "application/json, text/plain, */*",
-    "Accept-Language": "en-US,en;q=0.9",
-    "Accept-Encoding": "gzip, deflate, br",
-    "Origin": "https://www.nba.com",
-    "Referer": "https://www.nba.com/",
-    "x-nba-stats-origin": "stats",
-    "x-nba-stats-token": "true",
-    "Sec-Fetch-Site": "same-site",
-    "Sec-Fetch-Mode": "cors",
-    "Sec-Fetch-Dest": "empty",
-}
-
-
-def season_label(start_year: int) -> str:
-    return f"{start_year}-{str(start_year + 1)[-2:]}"
-
-
-def call_with_retry(fn, tries: int = 4, wait: float = 5.0):
-    """NBA.com sometimes times out; wait and try again."""
-    for attempt in range(1, tries + 1):
-        try:
-            return fn()
-        except Exception as err:  # noqa: BLE001
-            if attempt == tries:
-                raise
-            print(f"   retry {attempt}/{tries - 1} after error: {err}")
-            time.sleep(wait * attempt)
 
 
 def pull_shots() -> pd.DataFrame:
@@ -100,8 +64,8 @@ def main() -> None:
     totals.to_csv(RAW / "curry_official_totals.csv", index=False)
 
     with sqlite3.connect(DB_PATH) as conn:
-        shots.to_sql("shots", conn, if_exists="replace", index=False)
-        totals.to_sql("official_totals", conn, if_exists="replace", index=False)
+        shots.to_sql("curry_shots", conn, if_exists="replace", index=False)
+        totals.to_sql("curry_official_totals", conn, if_exists="replace", index=False)
 
     print(f"\nDone: {len(shots):,} shots across {shots['SEASON'].nunique()} seasons.")
     print(f"Saved to {RAW} and {DB_PATH}")
