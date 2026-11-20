@@ -225,9 +225,9 @@ def page_shots():
                                         proj(column("Curry Shot", "Make Probability"), "An average shooter makes this")]},
                     objects={
                         "categoryAxis": [{"properties": {"show": lit(False), "start": lit(-250), "end": lit(250),
-                                                         "gridlineShow": lit(False)}}],
+                                                         "gridlineShow": lit(False), "showAxisTitle": lit(False)}}],
                         "valueAxis": [{"properties": {"show": lit(False), "start": lit(-47.5), "end": lit(422.5),
-                                                      "gridlineShow": lit(False)}}],
+                                                      "gridlineShow": lit(False), "showAxisTitle": lit(False)}}],
                         "plotArea": [{"properties": {"transparency": lit(0), "image": {"image": {
                             "name": lit("court.png"), "url": resource("court.png"), "scaling": lit("Fill")}}}}],
                         "legend": [{"properties": {"show": lit(True), "position": lit("Top")}}],
