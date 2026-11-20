@@ -1,4 +1,4 @@
-"""Pull every regular-season NBA shot from 2013-14 to 2025-26, team by team.
+"""Pull every regular-season NBA shot from 2009-10 (Curry's rookie season) to 2025-26, team by team.
 
 Why team by team: a single league-wide request silently returns only about half the
 shots (NBA.com caps the response), so we ask for each of the 30 teams separately.
@@ -18,7 +18,7 @@ from nba_api.stats.endpoints import leaguedashteamstats, shotchartdetail
 
 from nba_common import HEADERS, RAW, call_with_retry, season_label
 
-FIRST_SEASON_START = 2013   # 2013-14
+FIRST_SEASON_START = 2009   # 2009-10, Curry's rookie season
 LAST_SEASON_START = 2025    # 2025-26, the last completed season
 OUT = RAW / "league"
 

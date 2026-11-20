@@ -44,11 +44,10 @@ QUALITY_SQL = {
     "shots with unknown team":      "SELECT COUNT(*) FROM fact_shot s LEFT JOIN dim_team t USING (TEAM_ID) WHERE t.TEAM_ID IS NULL",
     "Curry shots: league table vs Curry pull (difference)": """
         SELECT (SELECT COUNT(*) FROM fact_shot WHERE PLAYER_ID = 201939)
-             - (SELECT COUNT(*) FROM curry_shots WHERE SEASON >= '2013-14')""",
+             - (SELECT COUNT(*) FROM curry_shots)""",
     "Curry shots missing from league table": """
         SELECT COUNT(*) FROM curry_shots c
-        WHERE c.SEASON >= '2013-14'
-          AND NOT EXISTS (SELECT 1 FROM fact_shot f
+        WHERE NOT EXISTS (SELECT 1 FROM fact_shot f
                           WHERE f.SHOT_ID = c.SHOT_ID)""",  # SHOT_ID is the indexed primary key
 }
 

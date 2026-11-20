@@ -1,6 +1,6 @@
 CHECK,VALUE,STATUS
 duplicate SHOT_IDs,0,PASS
-shots with missing location,407,"KNOWN GAP (0.015%, excluded from model)"
+shots with missing location,509,"KNOWN GAP (0.015%, excluded from model)"
 made flag not 0/1,0,PASS
 shots with unknown player,0,PASS
 shots with unknown team,0,PASS
