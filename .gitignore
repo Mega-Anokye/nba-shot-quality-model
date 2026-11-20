@@ -12,3 +12,6 @@ data/processed/
 
 # Local tooling
 .claude/
+
+# Personal drafts (not published)
+drafts/

@@ -6,6 +6,8 @@
 
 ## The question
 
+> *"Steph Curry is the greatest shooter God ever created."* That's what I've always said. This project puts the claim to the data.
+
 How much of Stephen Curry's scoring comes from **getting good shots** (shot quality), and how much from **making hard ones** (shot making)?
 
 Raw field-goal percentage mixes the two together. A player who only takes layups can shoot 65% and still be an average scorer. This project builds an **expected-points (xPTS) model**: for every shot, it estimates how many points an average NBA player that season would score from the same spot and situation. Then it measures how far Curry (and every other shooter) beats that expectation.
@@ -150,7 +152,7 @@ Both dashboards read the same exported tables (`dashboard/data/`), and both were
 **Web dashboard** (`docs/`, served by GitHub Pages): a single HTML page with Plotly.js. Every shot is drawn on the court with hover details. Season, result and zone filters update the cards and charts, and clicking a season bar jumps to that year. A league leaderboard with season, minimum-shots and player-search filters highlights Curry, next to a shot-quality vs shot-making scatter. It works on phones.
 
 **Power BI report** (`dashboard/NBA Shot Quality.pbip`): a Power BI Project, stored as plain text so every DAX measure is visible in the repo.
-- Semantic model: star schema (`Player`, `Season`, `Player Season`, `Curry Shot`) with 30 DAX measures, including a league rank that responds to a "Minimum shots" slicer.
+- Semantic model: star schema (`Player`, `Season`, `Player Season`, `Curry Shot`) with 29 DAX measures, including a league rank that responds to a "Minimum shots" slicer.
 - Three pages: Curry career, shot chart on the court, and league leaderboard, with cross-filtering slicers and tooltips.
 - To open it: set the `DataFolder` parameter to your copy of `dashboard/data/`, then click Refresh.
 
