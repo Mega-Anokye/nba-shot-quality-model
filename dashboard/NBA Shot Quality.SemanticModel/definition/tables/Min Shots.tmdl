@@ -1,0 +1,8 @@
+/// Slicer: minimum shots for a player to be ranked
+table 'Min Shots'
+	lineageTag: 955e8596-3f43-4a3d-bf59-35f30042e551
+
+	partition 'Min Shots' = calculated
+		mode: import
+		source = GENERATESERIES(0, 5000, 100)
+

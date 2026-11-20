@@ -1,0 +1,4 @@
+/// Expected-points model: Stephen Curry shot quality vs shot making, 2009-10 to 2025-26
+database 'NBA Shot Quality'
+	compatibilityLevel: 1600
+

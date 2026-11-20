@@ -1,0 +1,12 @@
+relationship PlayerSeason_Player
+	fromColumn: 'Player Season'.'Player ID'
+	toColumn: Player.'Player ID'
+
+relationship PlayerSeason_Season
+	fromColumn: 'Player Season'.Season
+	toColumn: Season.Season
+
+relationship CurryShot_Season
+	fromColumn: 'Curry Shot'.Season
+	toColumn: Season.Season
+

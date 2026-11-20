@@ -1,0 +1,28 @@
+/// Every player with at least one shot, 2009-10 to 2025-26
+table Player
+	lineageTag: 7138c56b-aa60-4a14-b00b-6b3903f5cd53
+
+	column 'Player ID'
+		dataType: int64
+		isHidden
+		isKey
+		lineageTag: 7683347f-c2be-4c9d-9a49-4efc6cc1b3bc
+		summarizeBy: none
+		sourceColumn: PLAYER_ID
+
+	column Player
+		dataType: string
+		lineageTag: 6af1d1f1-ea60-4eea-9eb4-b34d8c5deb07
+		summarizeBy: none
+		sourceColumn: PLAYER_NAME
+
+	partition Player = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "dim_player.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"PLAYER_ID", Int64.Type}, {"PLAYER_NAME", type text}}, "en-US")
+				in
+				    Typed
+

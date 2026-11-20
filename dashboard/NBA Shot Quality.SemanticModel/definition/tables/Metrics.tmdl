@@ -1,0 +1,177 @@
+/// All report measures
+table Metrics
+	lineageTag: a9da20f6-0f48-4159-baa0-34d776a57399
+
+	measure Shots = SUM('Player Season'[Shots])
+		formatString: #,0
+		displayFolder: League
+		lineageTag: aa2cff6f-a1fd-4a31-b34d-e4a2583dcab8
+
+	measure Makes = SUM('Player Season'[Makes])
+		formatString: #,0
+		displayFolder: League
+		lineageTag: 28150576-fa25-430c-9e58-d38a96a05f27
+
+	measure FG% = DIVIDE([Makes], [Shots])
+		formatString: 0.0%
+		displayFolder: League
+		lineageTag: ee89154a-9920-4cb9-9559-fb0b8d462f73
+
+	measure Points = SUM('Player Season'[Points])
+		formatString: #,0
+		displayFolder: League
+		lineageTag: a8f91a18-6108-4ab4-8013-d4aca76b4bc4
+
+	/// Points an average shooter that season would score from the same shots
+	measure 'Expected Points' = SUM('Player Season'[Expected Points])
+		formatString: #,0
+		displayFolder: League
+		lineageTag: 42f5f268-0813-4aef-acb6-02842ede1033
+
+	/// Shot making: actual points minus expected points
+	measure 'Points Above Expected' = [Points] - [Expected Points]
+		formatString: +#,0;-#,0;0
+		displayFolder: League
+		lineageTag: e105ad50-9df0-46f7-8759-1522417e1592
+
+	/// Points above expected per 100 shots
+	measure 'PAE per 100' = DIVIDE([Points Above Expected], [Shots]) * 100
+		formatString: +0.0;-0.0;0.0
+		displayFolder: League
+		lineageTag: 18bb8350-7f07-445f-bcf3-eee46cdaca71
+
+	measure 'Points per Shot' = DIVIDE([Points], [Shots])
+		formatString: 0.000
+		displayFolder: League
+		lineageTag: 25f1ea4f-1f65-4d13-98ea-cd26a4698649
+
+	/// Shot quality: expected points per shot
+	measure 'Expected per Shot' = DIVIDE([Expected Points], [Shots])
+		formatString: 0.000
+		displayFolder: League
+		lineageTag: 79ed8c06-a10b-4b77-aa21-17c311f6cac6
+
+	measure 'Min Shots Selected' = SELECTEDVALUE('Min Shots'[Value], 500)
+		formatString: #,0
+		displayFolder: Ranking
+		lineageTag: 545d2fe2-12f3-4123-95f8-6b7792d59aee
+
+	measure 'Players Ranked' =
+			VAR MinShots = [Min Shots Selected]
+			RETURN COUNTROWS(FILTER(ALLSELECTED('Player'), [Shots] >= MinShots))
+		formatString: #,0
+		displayFolder: Ranking
+		lineageTag: e5de8731-e870-4b67-9fc0-6a6a2fc0b858
+
+	/// Rank by total points above expected among players with at least the selected number of shots
+	measure 'PAE Rank' =
+			VAR MinShots = [Min Shots Selected]
+			RETURN
+			IF(
+			    [Shots] >= MinShots,
+			    RANKX(
+			        FILTER(ALLSELECTED('Player'), [Shots] >= MinShots),
+			        [Points Above Expected], , DESC, Skip
+			    )
+			)
+		formatString: #,0
+		displayFolder: Ranking
+		lineageTag: 63ff2884-f123-437c-8c04-2a26af0cb90d
+
+	measure 'Rank Label' =
+			VAR r = [PAE Rank]
+			RETURN IF(ISBLANK(r), "Not ranked", "#" & r & " of " & [Players Ranked])
+		displayFolder: Ranking
+		lineageTag: ff9aedab-0f9e-4796-b8e7-782b71651951
+
+	measure 'Curry Shots' = COUNTROWS('Curry Shot')
+		formatString: #,0
+		displayFolder: Curry
+		lineageTag: fc014492-a607-4de7-92e0-b94ca0af3dbf
+
+	measure 'Curry FG%' = DIVIDE(SUM('Curry Shot'[Made]), [Curry Shots])
+		formatString: 0.0%
+		displayFolder: Curry
+		lineageTag: b7d2aa5d-1809-43fb-9860-550cb78b2649
+
+	/// FG% an average shooter that season would have on the same shots
+	measure 'Curry Expected FG%' = AVERAGE('Curry Shot'[Make Probability])
+		formatString: 0.0%
+		displayFolder: Curry
+		lineageTag: fc3b6318-a995-4e78-b4f7-8fa7cac1feba
+
+	measure 'Curry FG% Above Expected' = [Curry FG%] - [Curry Expected FG%]
+		formatString: +0.0%;-0.0%;0.0%
+		displayFolder: Curry
+		lineageTag: 14c373a4-b0d2-4cf3-9863-cb0f6bcd710c
+
+	measure 'Curry Points' = SUM('Curry Shot'[Points])
+		formatString: #,0
+		displayFolder: Curry
+		lineageTag: c533c9ed-9aea-4d78-bfa8-0326b136003e
+
+	measure 'Curry Expected Points' = SUM('Curry Shot'[Expected Points])
+		formatString: #,0
+		displayFolder: Curry
+		lineageTag: 6f857ef8-5e03-4ba0-9838-1a5ae7d86021
+
+	measure 'Curry PAE' = [Curry Points] - [Curry Expected Points]
+		formatString: +#,0;-#,0;0
+		displayFolder: Curry
+		lineageTag: d3d64dc1-2bc9-4b91-bf6e-c5fc519fda9e
+
+	measure 'Curry PAE per 100' = DIVIDE([Curry PAE], [Curry Shots]) * 100
+		formatString: +0.0;-0.0;0.0
+		displayFolder: Curry
+		lineageTag: e81cafc7-9e0b-4457-b043-1d22fc81720a
+
+	measure 'Curry Points per Shot' = DIVIDE([Curry Points], [Curry Shots])
+		formatString: 0.000
+		displayFolder: Curry
+		lineageTag: aa93bb49-6fba-48da-8a83-f215455f531c
+
+	measure 'Curry Expected per Shot' = DIVIDE([Curry Expected Points], [Curry Shots])
+		formatString: 0.000
+		displayFolder: Curry
+		lineageTag: ad6ad2e7-6f66-46f7-97db-2107bd35ab14
+
+	measure 'Curry 3PA Share' = DIVIDE(CALCULATE([Curry Shots], 'Curry Shot'[Shot Value] = 3), [Curry Shots])
+		formatString: 0%
+		displayFolder: Curry
+		lineageTag: 352cd307-c4fb-4c06-bb8b-f69a7f7ed72b
+
+	measure 'Season Label' =
+			IF(
+			    ISFILTERED('Season'[Season]),
+			    CONCATENATEX(VALUES('Season'[Season]), 'Season'[Season], ", ", 'Season'[Season Start], ASC),
+			    "All seasons, 2009-10 to 2025-26"
+			)
+		displayFolder: Labels
+		lineageTag: efcf91c5-b765-4f1b-ad10-7ff1ef277548
+
+	/// Points per shot, only for players at or above the minimum shots
+	measure 'Ranked Points per Shot' = IF([Shots] >= [Min Shots Selected], [Points per Shot])
+		formatString: 0.000
+		displayFolder: Ranking
+		lineageTag: 0f7a0908-7591-4b96-bc91-aeeba420846c
+
+	/// Expected points per shot, only for players at or above the minimum shots
+	measure 'Ranked Expected per Shot' = IF([Shots] >= [Min Shots Selected], [Expected per Shot])
+		formatString: 0.000
+		displayFolder: Ranking
+		lineageTag: 59614600-af2f-4a73-9b00-432c68b3deea
+
+	/// Points above expected, only for players at or above the minimum shots
+	measure 'Ranked PAE' = IF([Shots] >= [Min Shots Selected], [Points Above Expected])
+		formatString: +#,0;-#,0;0
+		displayFolder: Ranking
+		lineageTag: 7140945e-341f-4f42-abd3-23e7b5a05af1
+
+	measure 'Shot Chart Title' = "Every shot, " & [Season Label] & "  ·  " & FORMAT([Curry Shots], "#,0") & " shots"
+		displayFolder: Labels
+		lineageTag: e7808961-559a-42c3-b6c5-6fb56ee96d34
+
+	partition Metrics = calculated
+		mode: import
+		source = ROW("_", BLANK())
+

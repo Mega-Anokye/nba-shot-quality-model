@@ -1,0 +1,29 @@
+/// NBA regular seasons
+table Season
+	lineageTag: f41ff2ff-41e2-4bee-8268-2bc1fdee024f
+
+	column Season
+		dataType: string
+		isKey
+		lineageTag: d8cc992b-719d-4cf5-87a5-b397631427f2
+		summarizeBy: none
+		sourceColumn: SEASON
+		sortByColumn: 'Season Start'
+
+	column 'Season Start'
+		dataType: int64
+		isHidden
+		lineageTag: 7763618d-d8f3-4541-b83b-8577dba48f0c
+		summarizeBy: none
+		sourceColumn: SEASON_START
+
+	partition Season = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "dim_season.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"SEASON", type text}, {"SEASON_START", Int64.Type}}, "en-US")
+				in
+				    Typed
+

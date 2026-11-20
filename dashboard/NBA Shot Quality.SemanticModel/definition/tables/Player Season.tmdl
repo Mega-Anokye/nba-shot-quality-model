@@ -1,0 +1,63 @@
+/// One row per player-season: shots, makes, points and expected points (out-of-sample, season-recalibrated)
+table 'Player Season'
+	lineageTag: 84b24f82-6671-4b7d-a165-2fc5581dec0a
+
+	column 'Player ID'
+		dataType: int64
+		isHidden
+		lineageTag: a2afdb1d-67f7-419d-8e46-4efdddb1339c
+		summarizeBy: none
+		sourceColumn: PLAYER_ID
+
+	column Season
+		dataType: string
+		isHidden
+		lineageTag: 40091cf3-9839-4a28-bca2-7a46991e1406
+		summarizeBy: none
+		sourceColumn: SEASON
+
+	column Shots
+		dataType: int64
+		isHidden
+		lineageTag: 99c279f3-cc41-4f4f-aabe-e25637c57754
+		summarizeBy: sum
+		sourceColumn: SHOTS
+
+	column Makes
+		dataType: int64
+		isHidden
+		lineageTag: 33389dcc-bb8f-46dc-a08f-57766a9519e3
+		summarizeBy: sum
+		sourceColumn: MAKES
+
+	column Threes
+		dataType: int64
+		isHidden
+		lineageTag: d278b972-1aaf-4837-9b0e-b27a0c5740fe
+		summarizeBy: sum
+		sourceColumn: THREES
+
+	column Points
+		dataType: int64
+		isHidden
+		lineageTag: 282305a5-d073-4a05-a43e-398b2b221924
+		summarizeBy: sum
+		sourceColumn: POINTS
+
+	column 'Expected Points'
+		dataType: double
+		isHidden
+		lineageTag: 32b0fb29-382c-4af0-848a-74ce662b7d0d
+		summarizeBy: sum
+		sourceColumn: XPTS
+
+	partition 'Player Season' = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "fact_player_season.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"PLAYER_ID", Int64.Type}, {"SEASON", type text}, {"SHOTS", Int64.Type}, {"MAKES", Int64.Type}, {"THREES", Int64.Type}, {"POINTS", Int64.Type}, {"XPTS", type number}}, "en-US")
+				in
+				    Typed
+

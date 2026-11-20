@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Curry Shot Quality</title>
+<meta name="description" content="Interactive expected-points model of Stephen Curry's shooting, 2009-10 to 2025-26: shot quality vs shot making.">
+<link rel="icon" href="ball.png">
+<script src="https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js"></script>
+<style>
+  :root {
+    --navy: #1D428A; --royal: #2b62c4; --gold: #FFC72C; --orange: #eb6834;
+    --bg: #f6f3ec; --card: #ffffff; --ink: #0b0b0b; --ink2: #52514e; --muted: #898781;
+    --line: #e1e0d9; --chip: #eef2fa;
+    color-scheme: light;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.5 "Segoe UI", system-ui, -apple-system, sans-serif; }
+  header { background: var(--navy); border-bottom: 6px solid var(--gold); color: #fff; }
+  .wrap { max-width: 1240px; margin: 0 auto; padding: 0 16px; }
+  .hero { display: flex; gap: 16px; align-items: center; padding: 18px 0; }
+  .hero img { width: 64px; height: 64px; flex: none; }
+  .hero h1 { margin: 0; font-size: clamp(20px, 3.2vw, 30px); line-height: 1.15; }
+  .hero p { margin: 4px 0 0; color: var(--gold); font-size: 14px; }
+  .hero a { color: #fff; margin-left: auto; font-size: 13px; white-space: nowrap; opacity: .85; }
+  .lede { max-width: 860px; margin: 22px 0 8px; color: var(--ink2); }
+  .lede b { color: var(--ink); }
+  section { margin: 22px 0 30px; }
+  h2 { color: var(--navy); font-size: 20px; margin: 0 0 4px; }
+  .sub { color: var(--ink2); font-size: 13.5px; margin: 0 0 12px; }
+  .controls { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; margin: 10px 0 14px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip { border: 1px solid var(--line); background: var(--card); color: var(--ink2); border-radius: 999px; padding: 4px 11px; font-size: 13px; cursor: pointer; }
+  .chip.on { background: var(--royal); border-color: var(--royal); color: #fff; }
+  .chip:focus-visible, select:focus-visible, input:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+  label.ctl { font-size: 13px; color: var(--ink2); display: flex; gap: 6px; align-items: center; }
+  select, input[type=search], input[type=number] { font: inherit; font-size: 13px; padding: 4px 8px; border: 1px solid var(--line); border-radius: 6px; background: #fff; }
+  .kpis { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 14px; }
+  .kpi { background: var(--card); border-radius: 10px; padding: 12px 14px; box-shadow: 0 1px 3px rgba(0,0,0,.08); border-top: 4px solid var(--gold); }
+  .kpi .v { font-size: 26px; font-weight: 700; color: var(--navy); line-height: 1.2; }
+  .kpi .l { font-size: 12.5px; color: var(--ink2); }
+  .grid { display: grid; grid-template-columns: 1.05fr 1fr; gap: 14px; }
+  .card { background: var(--card); border-radius: 10px; padding: 12px; box-shadow: 0 1px 3px rgba(0,0,0,.08); min-width: 0; }
+  .card h3 { margin: 2px 4px 2px; font-size: 14.5px; color: var(--navy); }
+  .card .note { margin: 0 4px 6px; font-size: 12.5px; color: var(--muted); }
+  .stack { display: grid; gap: 14px; }
+  #court { width: 100%; aspect-ratio: 500 / 470; }
+  #bySeason { height: 290px; } #byZone { height: 250px; } #quality { height: 440px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; font-variant-numeric: tabular-nums; }
+  th { background: var(--navy); color: #fff; text-align: right; padding: 7px 8px; font-weight: 600; position: sticky; top: 0; }
+  th:nth-child(-n+2), td:nth-child(-n+2) { text-align: left; }
+  td { padding: 6px 8px; border-bottom: 1px solid var(--line); text-align: right; }
+  tr.curry td { background: #fff4d1; font-weight: 700; }
+  .tablebox { max-height: 440px; overflow: auto; border-radius: 8px; }
+  .callout { background: var(--card); border-left: 5px solid var(--orange); border-radius: 8px; padding: 12px 16px; color: var(--ink2); font-size: 14px; }
+  footer { color: var(--muted); font-size: 12.5px; padding: 18px 0 30px; border-top: 1px solid var(--line); }
+  footer a { color: var(--royal); }
+  @media (max-width: 900px) {
+    .kpis { grid-template-columns: repeat(2, 1fr); }
+    .grid { grid-template-columns: 1fr; }
+    .hero a { display: none; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap hero">
+    <img src="ball.png" alt="">
+    <div>
+      <h1>Stephen Curry: shot quality vs shot making</h1>
+      <p>3.5 million NBA shots · 2009-10 to 2025-26 · every shot scored by a model that never saw its season</p>
+    </div>
+    <a href="https://github.com/Mega-Anokye/nba-shot-quality-model">Code and method on GitHub →</a>
+  </div>
+</header>
+
+<main class="wrap">
+  <p class="lede">For every shot, an XGBoost model estimates what an <b>average NBA shooter that season</b> would score from the same spot and game situation. Curry's <b>points above expected</b> is what he scored on top of that. Pick seasons, filter the shots, and click a bar in the season chart to jump to that year.</p>
+
+  <section aria-labelledby="h-curry">
+    <h2 id="h-curry">Curry's shots</h2>
+    <div class="controls">
+      <div class="chips" id="seasonChips" role="group" aria-label="Seasons"></div>
+    </div>
+    <div class="controls">
+      <div class="chips" id="resultChips" role="group" aria-label="Result"></div>
+      <label class="ctl">Zone <select id="zoneSel"></select></label>
+    </div>
+    <div class="kpis" id="kpis"></div>
+    <div class="grid">
+      <div class="card">
+        <h3>Every shot on the court</h3>
+        <p class="note" id="courtNote"></p>
+        <div id="court"></div>
+      </div>
+      <div class="stack">
+        <div class="card">
+          <h3>Points above expected per 100 shots, by season</h3>
+          <p class="note">Click a bar to show only that season. Grey bars: under 500 shots.</p>
+          <div id="bySeason"></div>
+        </div>
+        <div class="card">
+          <h3>By court zone</h3>
+          <p class="note">For the seasons and filters above</p>
+          <div id="byZone"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-league">
+    <h2 id="h-league">The league: who makes more than their shots are worth?</h2>
+    <p class="sub">Ranked by total points above expected. Curry's row is highlighted.</p>
+    <div class="controls">
+      <label class="ctl">Season <select id="lgSeason"></select></label>
+      <label class="ctl">Minimum shots <input type="number" id="lgMin" min="0" step="100" value="5000" style="width:90px"></label>
+      <label class="ctl">Find a player <input type="search" id="lgFind" placeholder="e.g. Klay Thompson" style="width:170px"></label>
+    </div>
+    <div class="grid">
+      <div class="card"><div class="tablebox"><table id="lgTable"></table></div></div>
+      <div class="card">
+        <h3>Shot quality vs shot making</h3>
+        <p class="note">Right = easier shots. Above the dashed line = scores more than the shots are worth. Bubble size = shots.</p>
+        <div id="quality"></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="callout"><b>Why the model ignores NBA.com's shot labels.</b> Before 2017-18, labels like "Pullup Jump Shot" were mostly written down when the shot went in: in 2009-10, threes labelled "pull-up" went in 71% of the time against a 35.5% league average. A model using them is partly told the answer, so this one uses only location, game clock and season.</div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    Data: NBA.com stats via <a href="https://github.com/swar/nba_api">nba_api</a>, regular seasons only; free throws not counted. Built by Mega Anokye · <a href="https://github.com/Mega-Anokye/nba-shot-quality-model">github.com/Mega-Anokye/nba-shot-quality-model</a>.
+    Artwork drawn for this project. Not affiliated with the NBA or the Golden State Warriors.
+  </div>
+</footer>
+
+<script>
+const C = { navy: "#1D428A", royal: "#2b62c4", orange: "#eb6834", gold: "#FFC72C", grey: "#c3c2b7", ink2: "#52514e", muted: "#898781", grid: "#e1e0d9" };
+const CFG = { displayModeBar: false, responsive: true };
+const FONT = { family: "Segoe UI, system-ui, sans-serif", size: 12, color: C.ink2 };
+const fmt = (v, d = 1, sign = true) => (sign && v > 0 ? "+" : "") + v.toLocaleString("en-US", { minimumFractionDigits: d, maximumFractionDigits: d });
+const pct = v => (100 * v).toFixed(1) + "%";
+
+let S, L;                         // Curry shots, league player-seasons
+const state = { seasons: new Set(), result: "All", zone: "All" };
+
+Promise.all([fetch("data/curry_shots.json").then(r => r.json()), fetch("data/player_seasons.json").then(r => r.json())])
+  .then(([s, l]) => { S = s; L = l; init(); })
+  .catch(e => { document.querySelector("main").insertAdjacentHTML("afterbegin", `<p class="callout">Could not load data: ${e}</p>`); });
+
+function chip(label, on, onClick) {
+  const b = document.createElement("button");
+  b.className = "chip" + (on ? " on" : ""); b.textContent = label; b.type = "button";
+  b.setAttribute("aria-pressed", on); b.onclick = onClick; return b;
+}
+
+function renderChips() {
+  const box = document.getElementById("seasonChips"); box.innerHTML = "";
+  box.append(chip("All seasons", state.seasons.size === 0, () => { state.seasons.clear(); update(); }));
+  S.seasons.forEach((s, i) => box.append(chip(s, state.seasons.has(i), () => {
+    state.seasons.has(i) ? state.seasons.delete(i) : state.seasons.add(i); update();
+  })));
+  const rb = document.getElementById("resultChips"); rb.innerHTML = "";
+  ["All", "Made", "Missed"].forEach(r => rb.append(chip(r === "All" ? "All shots" : r, state.result === r, () => { state.result = r; update(); })));
+}
+
+function init() {
+  const zs = document.getElementById("zoneSel");
+  zs.innerHTML = `<option value="All">All zones</option>` + S.zones.map((z, i) => `<option value="${i}">${z}</option>`).join("");
+  zs.onchange = () => { state.zone = zs.value; update(); };
+  const ls = document.getElementById("lgSeason");
+  ls.innerHTML = `<option value="All">All seasons (career)</option>` + L.seasons.map((s, i) => `<option value="${i}">${s}</option>`).join("");
+  ls.onchange = () => { document.getElementById("lgMin").value = ls.value === "All" ? 5000 : 500; league(); };
+  ["lgMin", "lgFind"].forEach(id => document.getElementById(id).oninput = league);
+  update(); league();
+}
+
+function selected(i, ignoreSeason = false) {
+  if (!ignoreSeason && state.seasons.size && !state.seasons.has(S.s[i])) return false;
+  if (state.result === "Made" && !S.made[i]) return false;
+  if (state.result === "Missed" && S.made[i]) return false;
+  if (state.zone !== "All" && S.z[i] !== +state.zone) return false;
+  return true;
+}
+
+function agg(idx) {
+  let n = 0, m = 0, pts = 0, xp = 0, ps = 0;
+  for (const i of idx) { n++; m += S.made[i]; pts += S.made[i] * S.val[i]; xp += S.p[i] * S.val[i]; ps += S.p[i]; }
+  return { n, m, pts, xp, fg: n ? m / n : 0, xfg: n ? ps / n : 0, pae: pts - xp, per100: n ? (pts - xp) / n * 100 : 0 };
+}
+
+function update() {
+  renderChips();
+  const idx = []; for (let i = 0; i < S.x.length; i++) if (selected(i)) idx.push(i);
+  const a = agg(idx);
+  document.getElementById("kpis").innerHTML = [
+    [a.n.toLocaleString(), "Shots"], [pct(a.fg), "FG%"], [pct(a.xfg), "Expected FG% (average shooter)"],
+    [fmt(a.pae, 0), "Points above expected"], [fmt(a.per100), "Per 100 shots"]
+  ].map(([v, l]) => `<div class="kpi"><div class="v">${a.n ? v : "–"}</div><div class="l">${l}</div></div>`).join("");
+  court(idx); bySeason(); byZone(idx);
+}
+
+function court(idx) {
+  const onCourt = idx.filter(i => S.y[i] <= 422.5);           // half-court heaves sit off the drawing
+  const trace = (made, name, colour, symbol) => {
+    const ii = onCourt.filter(i => S.made[i] === made);
+    return {
+      type: "scattergl", mode: "markers", name, x: ii.map(i => S.x[i]), y: ii.map(i => S.y[i]),
+      customdata: ii.map(i => [S.date[i], S.d[i], S.zones[S.z[i]], pct(S.p[i]), S.seasons[S.s[i]]]),
+      hovertemplate: "<b>%{customdata[0]}</b> (%{customdata[4]})<br>%{customdata[2]}, %{customdata[1]} ft<br>Average shooter makes this: %{customdata[3]}<extra>" + name + "</extra>",
+      marker: { color: colour, symbol,
+                size: made ? (idx.length > 4000 ? 4.5 : 7) : (idx.length > 4000 ? 4 : 6),
+                opacity: made ? (idx.length > 4000 ? 0.55 : 0.85) : (idx.length > 4000 ? 0.3 : 0.7),
+                line: { color: colour, width: made ? 0 : 1.2 } }
+    };
+  };
+  const note = document.getElementById("courtNote");
+  const off = idx.length - onCourt.length;
+  note.textContent = `${idx.length.toLocaleString()} shots${off ? ` (${off} from beyond half court not drawn)` : ""}. Blue dot = made, orange cross = missed. Hover a shot for details.`;
+  Plotly.react("court", [trace(0, "Missed", C.orange, "x-thin-open"), trace(1, "Made", C.royal, "circle")], {
+    margin: { l: 0, r: 0, t: 0, b: 0 }, font: FONT, showlegend: true,
+    legend: { orientation: "h", x: 0.01, y: 0.99, bgcolor: "rgba(255,255,255,.8)" },
+    xaxis: { range: [-250, 250], visible: false, fixedrange: true, constrain: "domain" },
+    yaxis: { range: [-47.5, 422.5], visible: false, fixedrange: true, scaleanchor: "x", scaleratio: 1, constrain: "domain" },
+    images: [{ source: "court.png", xref: "x", yref: "y", x: -250, y: 422.5, sizex: 500, sizey: 470, sizing: "stretch", layer: "below" }],
+    plot_bgcolor: "rgba(0,0,0,0)", paper_bgcolor: "rgba(0,0,0,0)", hoverlabel: { bgcolor: "#fff", font: FONT }
+  }, CFG);
+}
+
+function bySeason() {
+  const rows = S.seasons.map((s, si) => {
+    const idx = []; for (let i = 0; i < S.x.length; i++) if (S.s[i] === si && selected(i, true)) idx.push(i);
+    return { s, si, ...agg(idx) };
+  });
+  const colours = rows.map(r => r.n < 500 ? C.grey : (state.seasons.size && !state.seasons.has(r.si) ? "#b9c9ea" : C.royal));
+  Plotly.react("bySeason", [{
+    type: "bar", x: rows.map(r => r.s), y: rows.map(r => r.per100), marker: { color: colours },
+    customdata: rows.map(r => [r.n.toLocaleString(), fmt(r.pae, 0), pct(r.fg), pct(r.xfg)]),
+    hovertemplate: "<b>%{x}</b><br>%{y:+.1f} per 100 shots<br>%{customdata[1]} points above expected<br>FG %{customdata[2]} vs expected %{customdata[3]}<br>%{customdata[0]} shots<extra></extra>"
+  }], {
+    margin: { l: 44, r: 8, t: 6, b: 54 }, font: FONT, bargap: 0.3,
+    xaxis: { type: "category", tickangle: -45, fixedrange: true }, yaxis: { gridcolor: C.grid, zeroline: true, zerolinecolor: C.grey, fixedrange: true, title: { text: "per 100 shots", font: { size: 11 } } },
+    plot_bgcolor: "#fff", paper_bgcolor: "#fff", hoverlabel: { bgcolor: "#fff", font: FONT }
+  }, CFG);
+  const el = document.getElementById("bySeason");
+  el.removeAllListeners && el.removeAllListeners("plotly_click");
+  el.on("plotly_click", ev => { const si = S.seasons.indexOf(ev.points[0].x); state.seasons = new Set([si]); update(); });
+}
+
+function byZone(idx) {
+  const rows = S.zones.map((z, zi) => ({ z, ...agg(idx.filter(i => S.z[i] === zi)) })).filter(r => r.n >= 20)
+    .sort((a, b) => a.per100 - b.per100);
+  Plotly.react("byZone", [{
+    type: "bar", orientation: "h", y: rows.map(r => r.z), x: rows.map(r => r.per100), marker: { color: C.orange },
+    text: rows.map(r => fmt(r.per100)), textposition: "outside", cliponaxis: false,
+    customdata: rows.map(r => [r.n.toLocaleString(), pct(r.fg), pct(r.xfg)]),
+    hovertemplate: "<b>%{y}</b><br>%{x:+.1f} per 100 shots<br>FG %{customdata[1]} vs expected %{customdata[2]}<br>%{customdata[0]} shots<extra></extra>"
+  }], {
+    margin: { l: 110, r: 40, t: 4, b: 30 }, font: FONT,
+    xaxis: { gridcolor: C.grid, zerolinecolor: C.grey, fixedrange: true }, yaxis: { fixedrange: true },
+    plot_bgcolor: "#fff", paper_bgcolor: "#fff", hoverlabel: { bgcolor: "#fff", font: FONT }
+  }, CFG);
+}
+
+function league() {
+  const season = document.getElementById("lgSeason").value;
+  const minShots = +document.getElementById("lgMin").value || 0;
+  const find = document.getElementById("lgFind").value.trim().toLowerCase();
+  const by = new Map();
+  for (let i = 0; i < L.pl.length; i++) {
+    if (season !== "All" && L.s[i] !== +season) continue;
+    const r = by.get(L.pl[i]) || { p: L.pl[i], shots: 0, makes: 0, pts: 0, xpts: 0 };
+    r.shots += L.shots[i]; r.makes += L.makes[i]; r.pts += L.pts[i]; r.xpts += L.xpts[i]; by.set(L.pl[i], r);
+  }
+  const rows = [...by.values()].filter(r => r.shots >= minShots)
+    .map(r => ({ ...r, name: L.players[r.p], pae: r.pts - r.xpts, pps: r.pts / r.shots, xpps: r.xpts / r.shots, per100: (r.pts - r.xpts) / r.shots * 100 }))
+    .sort((a, b) => b.pae - a.pae);
+  rows.forEach((r, i) => r.rank = i + 1);
+  const curry = rows.find(r => r.name === "Stephen Curry");
+  let shown = find ? rows.filter(r => r.name.toLowerCase().includes(find)) : rows.slice(0, 25);
+  if (!find && curry && curry.rank > 25) shown = [...shown, curry];
+  const head = "<tr><th>#</th><th>Player</th><th>Shots</th><th>Expected / shot</th><th>Points / shot</th><th>Points above expected</th><th>Per 100</th></tr>";
+  document.getElementById("lgTable").innerHTML = head + (shown.length ? shown.map(r =>
+    `<tr class="${r.name === "Stephen Curry" ? "curry" : ""}"><td>${r.rank}</td><td>${r.name}</td><td>${r.shots.toLocaleString()}</td><td>${r.xpps.toFixed(3)}</td><td>${r.pps.toFixed(3)}</td><td>${fmt(r.pae, 0)}</td><td>${fmt(r.per100)}</td></tr>`
+  ).join("") : `<tr><td colspan="7">No players match. Try a lower minimum.</td></tr>`) +
+    `<tr><td colspan="7" style="color:#898781;text-align:left">${rows.length.toLocaleString()} players with at least ${minShots.toLocaleString()} shots</td></tr>`;
+
+  const others = rows.filter(r => r.name !== "Stephen Curry");
+  const maxShots = Math.max(...rows.map(r => r.shots), 1);
+  const size = r => 5 + 22 * Math.sqrt(r.shots / maxShots);
+  const lo = Math.min(...rows.map(r => Math.min(r.xpps, r.pps)), 0.8), hi = Math.max(...rows.map(r => Math.max(r.xpps, r.pps)), 1.3);
+  const tr = (rs, name, colour, op) => ({
+    type: "scatter", mode: "markers", name, x: rs.map(r => r.xpps), y: rs.map(r => r.pps), text: rs.map(r => r.name),
+    customdata: rs.map(r => [r.rank, fmt(r.pae, 0), r.shots.toLocaleString()]),
+    hovertemplate: "<b>%{text}</b> (#%{customdata[0]})<br>Expected %{x:.3f}, scored %{y:.3f} per shot<br>%{customdata[1]} points above expected<br>%{customdata[2]} shots<extra></extra>",
+    marker: { color: colour, opacity: op, size: rs.map(size), line: { color: "#fff", width: 1 } }
+  });
+  const traces = [tr(others, "Other players", C.royal, 0.45)];
+  if (curry) traces.push({ ...tr([curry], "Stephen Curry", C.orange, 1), mode: "markers+text", textposition: "top center", textfont: { color: "#0b0b0b", size: 12 } });
+  Plotly.react("quality", traces, {
+    margin: { l: 48, r: 10, t: 6, b: 40 }, font: FONT, showlegend: true, legend: { orientation: "h", y: -0.14 },
+    xaxis: { title: { text: "Expected points per shot (shot quality)" }, gridcolor: C.grid, range: [lo - 0.02, hi + 0.02] },
+    yaxis: { title: { text: "Points per shot" }, gridcolor: C.grid, range: [lo - 0.02, hi + 0.02] },
+    shapes: [{ type: "line", x0: lo - 0.02, y0: lo - 0.02, x1: hi + 0.02, y1: hi + 0.02, line: { color: C.muted, dash: "dash", width: 1 } }],
+    plot_bgcolor: "#fff", paper_bgcolor: "#fff", hoverlabel: { bgcolor: "#fff", font: FONT }
+  }, CFG);
+}
+</script>
+</body>
+</html>

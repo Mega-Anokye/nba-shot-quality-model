@@ -1,0 +1,110 @@
+/// Every Stephen Curry regular-season shot with court location, outcome and expected points
+table 'Curry Shot'
+	lineageTag: d5084e5e-59eb-4f47-ba1c-7d96502dd993
+
+	column 'Shot ID'
+		dataType: string
+		isKey
+		lineageTag: 1feb6e86-7156-46fa-b00c-1b04874f17d9
+		summarizeBy: none
+		sourceColumn: SHOT_ID
+
+	column Season
+		dataType: string
+		isHidden
+		lineageTag: 05a635b9-9c35-4d07-a631-5adacde0c1bf
+		summarizeBy: none
+		sourceColumn: SEASON
+
+	column 'Game Date'
+		dataType: dateTime
+		formatString: d mmm yyyy
+		lineageTag: a10b94bb-cee6-471b-a795-46e8c0726084
+		summarizeBy: none
+		sourceColumn: GAME_DATE
+
+	/// Horizontal position, tenths of a foot from the basket
+	column 'Court X'
+		dataType: int64
+		lineageTag: 2d603648-28fd-45bd-94ed-00953fe928ad
+		summarizeBy: none
+		sourceColumn: LOC_X
+
+	/// Distance up the court, tenths of a foot from the basket
+	column 'Court Y'
+		dataType: int64
+		lineageTag: 2efe5519-53f0-4424-be15-4d0bc3bf7226
+		summarizeBy: none
+		sourceColumn: LOC_Y
+
+	column 'Distance (ft)'
+		dataType: double
+		formatString: 0.0
+		lineageTag: 16b5c581-fcf6-4a86-9930-bd8690e9e0cd
+		summarizeBy: none
+		sourceColumn: DIST_FT
+
+	column Zone
+		dataType: string
+		lineageTag: 3c1c12aa-843c-498b-9735-d05b6851cc3f
+		summarizeBy: none
+		sourceColumn: ZONE
+
+	column 'Shot Type'
+		dataType: string
+		lineageTag: 706bce06-31bc-4cdf-9509-d9d99d1125e3
+		summarizeBy: none
+		sourceColumn: SHOT_TYPE
+
+	column Result
+		dataType: string
+		lineageTag: 083e0749-cdb4-42e0-8ec4-8f4f76541ffd
+		summarizeBy: none
+		sourceColumn: RESULT
+
+	column Made
+		dataType: int64
+		isHidden
+		lineageTag: c723eb1c-569b-4677-8f1b-0fa6633316d7
+		summarizeBy: sum
+		sourceColumn: SHOT_MADE_FLAG
+
+	column 'Shot Value'
+		dataType: int64
+		isHidden
+		lineageTag: d352cc98-5171-4c98-9b75-8230743bd20f
+		summarizeBy: none
+		sourceColumn: SHOT_VALUE
+
+	column Points
+		dataType: int64
+		isHidden
+		lineageTag: 768348e7-4b81-4ed6-b208-dbc5308ad334
+		summarizeBy: sum
+		sourceColumn: POINTS
+
+	/// Chance an average shooter that season makes this shot
+	column 'Make Probability'
+		dataType: double
+		formatString: 0.0%
+		lineageTag: dc0ff3f7-6601-42d8-8ec5-b0b006cf0283
+		summarizeBy: none
+		sourceColumn: MAKE_PROB
+
+	column 'Expected Points'
+		dataType: double
+		isHidden
+		lineageTag: 3984ae5a-c512-4fd5-b72f-4ee7e3931b9e
+		summarizeBy: sum
+		sourceColumn: XPTS
+
+	partition 'Curry Shot' = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "fact_curry_shot.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"SHOT_ID", type text}, {"SEASON", type text}, {"GAME_DATE", type date}, {"LOC_X", Int64.Type}, {"LOC_Y", Int64.Type}, {"DIST_FT", type number}, {"ZONE", type text}, {"SHOT_TYPE", type text}, {"RESULT", type text}, {"SHOT_MADE_FLAG", Int64.Type}, {"SHOT_VALUE", Int64.Type}, {"POINTS", Int64.Type}, {"MAKE_PROB", type number}, {"XPTS", type number}}, "en-US")
+				in
+				    Typed
+

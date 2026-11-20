@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "NBA Shot Quality"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "ceb28f06-303e-45b8-acfa-694b647ed565"
+  }
+}

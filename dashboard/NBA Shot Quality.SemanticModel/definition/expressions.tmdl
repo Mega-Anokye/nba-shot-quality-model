@@ -1,0 +1,4 @@
+/// Folder holding the dashboard CSVs (dashboard/data in the repo). Set this to your own copy after cloning (Transform data > Edit parameters), keeping the trailing backslash.
+expression DataFolder = "C:\path\to\nba-shot-quality-model\dashboard\data\" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+	lineageTag: a74ba58f-32f3-4f6a-bb55-78422b4996e8
+

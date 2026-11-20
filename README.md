@@ -1,6 +1,8 @@
 # Shot Quality vs Shot Making: An Expected-Points Model for Stephen Curry
 
-> **Status:** 🏗️ In progress. Data pipeline, model and Curry's full-career analysis done. Next: Power BI dashboard and automated refresh.
+> **Status:** Data pipeline, model, Curry's full-career analysis and both dashboards done. Next: automated in-season refresh.
+>
+> **▶ Interactive dashboard:** https://mega-anokye.github.io/nba-shot-quality-model/ (filter Curry's 19,152 shots by season, result and zone; explore the league leaderboard)
 
 ## The question
 
@@ -26,7 +28,7 @@ Raw field-goal percentage mixes the two together. A player who only takes layups
 | 3. Checks | Reconcile every team-season against official totals; data quality checks | Python, SQL | ✅ |
 | 4. Model | Make probability per shot: zone baseline vs logistic regression vs XGBoost | scikit-learn, XGBoost | ✅ |
 | 5. Metric | **Points Above Expected (PAE)**, every shot scored out-of-sample | pandas, SciPy | ✅ |
-| 6. Dashboard | Shot charts, PAE leaderboard, Curry by zone and season | Power BI | ⏳ |
+| 6. Dashboards | Interactive web dashboard + Power BI report (shot chart, leaderboard, Curry by season and zone) | Plotly.js, GitHub Pages, Power BI, DAX | ✅ |
 | 7. Automation | Nightly data refresh during the season | GitHub Actions | ⏳ |
 
 ## The data, and how it was checked
@@ -141,6 +143,19 @@ He beats expectation in **every** zone. The biggest single contributor is the ab
 | 4 | LeBron James | 21,625 | +1,823 | +8.4 |
 | 5 | Chris Paul | 13,043 | +1,736 | +13.3 |
 
+## Dashboards
+
+Both dashboards read the same exported tables (`dashboard/data/`), and both were checked against the Python results: career +3,188 points above expected, 2015-16 at +26.9 per 100 shots, Curry 16th of 178 in 2021-22, and the same top-5 career leaderboard.
+
+**Web dashboard** (`docs/`, served by GitHub Pages): a single HTML page with Plotly.js. Every shot is drawn on the court with hover details. Season, result and zone filters update the cards and charts, and clicking a season bar jumps to that year. A league leaderboard with season, minimum-shots and player-search filters highlights Curry, next to a shot-quality vs shot-making scatter. It works on phones.
+
+**Power BI report** (`dashboard/NBA Shot Quality.pbip`): a Power BI Project, stored as plain text so every DAX measure is visible in the repo.
+- Semantic model: star schema (`Player`, `Season`, `Player Season`, `Curry Shot`) with 30 DAX measures, including a league rank that responds to a "Minimum shots" slicer.
+- Three pages: Curry career, shot chart on the court, and league leaderboard, with cross-filtering slicers and tooltips.
+- To open it: set the `DataFolder` parameter to your copy of `dashboard/data/`, then click Refresh.
+
+**Artwork:** the court, basketball icon and banner are drawn in code (`dashboard/art/make_art.py`). No NBA or team logos or player photos are used. The chart colours were checked for colour-blind readers.
+
 ## Limitations
 
 - **No defender data.** Public data has location but not how close the nearest defender was. Part of what the model calls "shot making" is really "shot difficulty it can't see". That includes the value of a pull-up or step-back, which can't be used safely before 2017-18 (see the label leak).
@@ -160,11 +175,14 @@ He beats expectation in **every** zone. The biggest single contributor is the ab
 │   ├── check_league_shots.py  league reconciliation + data quality checks
 │   ├── features.py            loads shots and builds model features
 │   ├── train_models.py        trains, compares and calibrates the three models
-│   └── career_pae.py          leave-one-season-out scoring, Curry career, leaderboards
+│   ├── career_pae.py          leave-one-season-out scoring, Curry career, leaderboards
+│   ├── export_powerbi.py      dashboard tables (dashboard/data/)
+│   └── export_web.py          compact JSON for the web dashboard (docs/data/)
 ├── reports/                   model comparison, calibration, career results, figures
 ├── notebooks/                 exploration
 ├── data_checks/               check results (committed)
-├── dashboard/                 Power BI file and screenshots
+├── dashboard/                 Power BI Project (.pbip), report generator, data, artwork
+├── docs/                      interactive web dashboard (GitHub Pages)
 └── requirements.txt           pinned Python packages
 ```
 
@@ -187,6 +205,10 @@ python src/check_league_shots.py
 python src/train_models.py             # ~3 minutes
 python src/career_pae.py               # ~25 minutes (17 model fits)
 python src/career_pae.py --features full   # optional: the with-labels comparison
+python src/export_powerbi.py
+python src/export_web.py
+python dashboard/art/make_art.py
+python dashboard/build_report.py           # writes the Power BI report pages
 ```
 
 ## Author
