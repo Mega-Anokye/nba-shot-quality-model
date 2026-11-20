@@ -20,11 +20,14 @@
   .wrap { max-width: 1240px; margin: 0 auto; padding: 0 16px; }
   .hero { display: flex; gap: 16px; align-items: center; padding: 20px 0; }
   .hero img { width: 68px; height: 68px; flex: none; }
-  .hero h1 { margin: 0; font-size: clamp(22px, 3.6vw, 34px); line-height: 1.15; font-style: italic; }
+  .hero h1 { margin: 0; font-size: clamp(22px, 3.4vw, 32px); line-height: 1.15; }
+  .quote { margin: 22px 0 0; padding: 10px 16px; border-left: 5px solid var(--gold); background: var(--card); border-radius: 8px;
+           font-size: clamp(17px, 2.2vw, 21px); font-weight: 600; font-style: italic; color: var(--navy); }
+  .quote span { display: block; font-size: 13.5px; font-weight: 400; font-style: normal; color: var(--ink2); margin-top: 2px; }
   .hero p { margin: 6px 0 0; color: var(--gold); font-size: 15px; }
   .hero a { color: #fff; margin-left: auto; font-size: 13px; white-space: nowrap; opacity: .85; }
   .how { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 22px 0 6px; }
-  .step { background: var(--card); border-radius: 10px; padding: 12px 14px; box-shadow: 0 1px 3px rgba(0,0,0,.08); border-left: 5px solid var(--gold); font-size: 14px; color: var(--ink2); }
+  .step { background: var(--card); border-radius: 10px; padding: 12px 14px; box-shadow: 0 1px 3px rgba(0,0,0,.08); border-top: 3px solid var(--navy); font-size: 14px; color: var(--ink2); }
   .step b { display: block; color: var(--navy); font-size: 15px; margin-bottom: 2px; }
   .answer { margin: 16px 0 4px; font-size: clamp(16px, 2vw, 19px); max-width: 900px; }
   .answer b { color: var(--navy); }
@@ -71,14 +74,15 @@
   <div class="wrap hero">
     <img src="ball.png" alt="">
     <div>
-      <h1>"Steph Curry is the greatest shooter God ever created."</h1>
-      <p>So I checked every NBA shot since 2009. Here's the proof.</p>
+      <h1>Steph Curry vs the average NBA shooter</h1>
+      <p>Every NBA shot since 2009, explained in plain basketball terms</p>
     </div>
     <a href="https://github.com/Mega-Anokye/nba-shot-quality-model">How it was built →</a>
   </div>
 </header>
 
 <main class="wrap">
+  <blockquote class="quote">"Steph Curry is the greatest shooter God ever created."<span>That's what I've always said. Here's the data.</span></blockquote>
   <div class="how">
     <div class="step"><b>1. Every shot</b>All 3.5 million NBA shots from 2009-10 to 2025-26, and exactly where on the court each one was taken.</div>
     <div class="step"><b>2. The average shooter</b>A computer program learned how often an average NBA player makes a shot from each spot. It never got to peek at the season it was judging.</div>
