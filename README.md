@@ -1,25 +1,32 @@
-# Shot Quality vs Shot Making: An Expected-Points Model for Stephen Curry
+# "Steph Curry is the greatest shooter God ever created." So I checked.
 
-> **Status:** Data pipeline, model, Curry's full-career analysis and both dashboards done. Next: automated in-season refresh.
->
-> **▶ Interactive dashboard:** https://mega-anokye.github.io/nba-shot-quality-model/ (filter Curry's 19,152 shots by season, result and zone; explore the league leaderboard)
+*An expected-points model of 3.5 million NBA shots, 2009-10 to 2025-26.*
 
-## The question
+> **▶ Try the interactive dashboard:** https://mega-anokye.github.io/nba-shot-quality-model/
+> Pick any season, show only makes or misses, and look up any player.
 
-> *"Steph Curry is the greatest shooter God ever created."* That's what I've always said. This project puts the claim to the data.
+## In plain English
 
-How much of Stephen Curry's scoring comes from **getting good shots** (shot quality), and how much from **making hard ones** (shot making)?
+**The question.** If an average NBA player took Steph Curry's exact shots, how many points would he score? And how many more does Steph actually score?
 
-Raw field-goal percentage mixes the two together. A player who only takes layups can shoot 65% and still be an average scorer. This project builds an **expected-points (xPTS) model**: for every shot, it estimates how many points an average NBA player that season would score from the same spot and situation. Then it measures how far Curry (and every other shooter) beats that expectation.
+**How it works.**
+1. **Every shot:** all 3.5 million NBA shots since 2009, and exactly where on the court each one was taken.
+2. **The average shooter:** a computer program learned how often an average NBA player makes a shot from each spot. It never got to peek at the season it was judging.
+3. **Extra points:** what a player actually scored, minus what an average shooter would have scored from the same shots. More extra points = better shooter.
 
-## Headline findings
+**What it found.**
+1. **Steph is No. 1 since 2009.** From 19,152 shots he scored **3,188 extra points**, first of the 219 players with at least 5,000 shots. Kevin Durant (+2,917) and Nikola Jokić (+2,218) are next.
+2. **His shots are not easy ones.** An average shooter would get 1.00 points per shot from Steph's shots, a little less than from the typical NBA shot (1.04). Steph turns them into **1.16**.
+3. **He was the best in the league four times:** 2014-15, 2015-16 (his unanimous MVP season), 2016-17 and 2018-19. He was top five in 12 of his 15 full seasons, and still 5th and 12th in his late 30s.
+4. **The data tried to fool me twice.** NBA.com quietly sent only half the shots at first, and its shot notes ("pull-up", "step-back") were mostly written down when the shot went in. Both were caught by checking against official numbers. Details below.
 
-1. **Curry is the best shot-maker of the last 17 seasons.** Across 19,152 shots since 2009-10 he scored **3,188 points more** than an average shooter would have from the same shots: **+16.6 per 100 shots**, 1st among the 219 players with at least 5,000 attempts. Kevin Durant (+2,917) and Nikola Jokić (+2,218) are next.
-2. **His edge is shot making, not shot selection.** His shots are worth 1.00 expected points each, slightly *below* the league average of 1.04, because he takes so many long, hard threes. He turns them into 1.16.
-3. **He was the NBA's best shot-maker in four seasons:** 2014-15, 2015-16 (+26.9 per 100, his unanimous MVP year), 2016-17 and 2018-19. He was top 5 in 12 of his 15 full seasons, and still 5th and 12th in his late 30s.
-4. **NBA.com's shot labels leak the outcome before 2017-18**, and a model that uses them gets Curry's early career badly wrong. See below.
+![Curry season by season](reports/figures/curry_career_pae.png)
 
-![Curry career chart](reports/figures/curry_career_pae.png)
+*Above zero = better than an average shooter. In the technical sections below, "points above expected" means the same as "extra points".*
+
+---
+
+# The technical details (for data people)
 
 ## Method
 

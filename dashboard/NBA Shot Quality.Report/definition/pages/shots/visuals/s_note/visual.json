@@ -30,7 +30,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "Expected FG% is what an average NBA shooter that season would make from exactly these spots. Every shot was scored by a model that never saw that season. Power BI shows up to 10,000 dots at once, so pick a few seasons to see every shot.",
+                    "value": "A computer program learned how often an average NBA player makes a shot from each spot. It never got to peek at the season it was judging. Extra points = what Steph scored minus what an average shooter would have scored from the same shots. Power BI shows up to 10,000 dots at once, so pick a few seasons to see every shot.",
                     "textStyle": {
                       "color": "#52514e"
                     }

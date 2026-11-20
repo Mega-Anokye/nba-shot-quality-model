@@ -27,7 +27,8 @@
                 }
               },
               "queryRef": "Curry Shot.Zone",
-              "nativeQueryRef": "Zone"
+              "nativeQueryRef": "Zone",
+              "displayName": "Spot on the court"
             }
           ]
         },
@@ -46,7 +47,7 @@
               },
               "queryRef": "Metrics.Curry PAE per 100",
               "nativeQueryRef": "Curry PAE per 100",
-              "displayName": "Per 100 shots"
+              "displayName": "Extra points per 100 shots"
             }
           ]
         },
@@ -80,7 +81,7 @@
               },
               "queryRef": "Metrics.Curry FG%",
               "nativeQueryRef": "Curry FG%",
-              "displayName": "FG%"
+              "displayName": "Steph made"
             },
             {
               "field": {
@@ -95,7 +96,7 @@
               },
               "queryRef": "Metrics.Curry Expected FG%",
               "nativeQueryRef": "Curry Expected FG%",
-              "displayName": "Expected FG%"
+              "displayName": "An average shooter would make"
             }
           ]
         }
@@ -176,7 +177,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Per 100 shots, by court zone'"
+                  "Value": "'Where on the court he beats the average shooter'"
                 }
               }
             },

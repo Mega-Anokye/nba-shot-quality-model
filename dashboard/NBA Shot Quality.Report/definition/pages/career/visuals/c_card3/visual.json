@@ -28,7 +28,7 @@
               },
               "queryRef": "Metrics.Curry Expected per Shot",
               "nativeQueryRef": "Curry Expected per Shot",
-              "displayName": "Expected per shot (shot quality)"
+              "displayName": "Points an average shooter would get per shot"
             }
           ]
         }

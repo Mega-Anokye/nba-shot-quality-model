@@ -51,12 +51,12 @@
                       "Entity": "Metrics"
                     }
                   },
-                  "Property": "Expected per Shot"
+                  "Property": "Points per Shot"
                 }
               },
-              "queryRef": "Metrics.Expected per Shot",
-              "nativeQueryRef": "Expected per Shot",
-              "displayName": "Expected per shot"
+              "queryRef": "Metrics.Points per Shot",
+              "nativeQueryRef": "Points per Shot",
+              "displayName": "His points per shot"
             },
             {
               "field": {
@@ -66,12 +66,12 @@
                       "Entity": "Metrics"
                     }
                   },
-                  "Property": "Points per Shot"
+                  "Property": "Expected per Shot"
                 }
               },
-              "queryRef": "Metrics.Points per Shot",
-              "nativeQueryRef": "Points per Shot",
-              "displayName": "Points per shot"
+              "queryRef": "Metrics.Expected per Shot",
+              "nativeQueryRef": "Expected per Shot",
+              "displayName": "Average shooter's"
             },
             {
               "field": {
@@ -86,7 +86,7 @@
               },
               "queryRef": "Metrics.Ranked PAE",
               "nativeQueryRef": "Ranked PAE",
-              "displayName": "Points above expected"
+              "displayName": "Extra points"
             },
             {
               "field": {
@@ -101,7 +101,7 @@
               },
               "queryRef": "Metrics.PAE per 100",
               "nativeQueryRef": "PAE per 100",
-              "displayName": "Per 100"
+              "displayName": "Extra per 100"
             },
             {
               "field": {
@@ -208,7 +208,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Leaderboard: points above expected'"
+                  "Value": "'Leaderboard: extra points vs an average shooter'"
                 }
               }
             },

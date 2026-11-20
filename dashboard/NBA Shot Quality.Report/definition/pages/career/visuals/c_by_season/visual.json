@@ -46,7 +46,7 @@
               },
               "queryRef": "Metrics.Curry PAE per 100",
               "nativeQueryRef": "Curry PAE per 100",
-              "displayName": "Per 100 shots"
+              "displayName": "Extra points per 100 shots"
             }
           ]
         },
@@ -80,7 +80,7 @@
               },
               "queryRef": "Metrics.Curry PAE",
               "nativeQueryRef": "Curry PAE",
-              "displayName": "Points above expected"
+              "displayName": "Extra points"
             }
           ]
         }
@@ -163,7 +163,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Points above expected per 100 shots, by season'"
+                  "Value": "'Extra points per 100 shots, season by season (above zero = better than average)'"
                 }
               }
             },

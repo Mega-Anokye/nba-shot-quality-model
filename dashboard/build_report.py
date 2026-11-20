@@ -127,8 +127,9 @@ def banner(prefix, subtitle):
                  cobjects=container(None, background=False))
     text = visual(f"{prefix}title", "textbox", 112, 14, 900, 70, z=1000, background=False,
                   objects={"general": [{"properties": {"paragraphs": [
-                      {"textRuns": [{"value": "Stephen Curry: shot quality vs shot making",
-                                     "textStyle": {"fontSize": "22pt", "fontWeight": "bold", "color": "#FFFFFF"}}]},
+                      {"textRuns": [{"value": "“Steph Curry is the greatest shooter God ever created.”",
+                                     "textStyle": {"fontSize": "20pt", "fontWeight": "bold", "fontStyle": "italic",
+                                                   "color": "#FFFFFF"}}]},
                       {"textRuns": [{"value": subtitle,
                                      "textStyle": {"fontSize": "11pt", "color": GOLD}}]},
                   ]}}]},
@@ -158,40 +159,42 @@ def card(name, x, y, w, h, z, m, label):
 # ---------- pages ----------
 
 def page_career():
-    v = banner("c_", "Points above an average shooter that season, from the same shots  ·  2009-10 to 2025-26")
+    v = banner("c_", "Extra points Steph scored compared with an average NBA shooter taking the exact same shots  ·  2009-10 to 2025-26")
     v.append(season_slicer("c_season", 16, 112, 150, 592, 10))
-    cards = [("Curry PAE", "Points above expected"), ("Curry PAE per 100", "Per 100 shots"),
-             ("Curry Points per Shot", "Points per shot"), ("Curry Expected per Shot", "Expected per shot (shot quality)"),
-             ("Curry FG% Above Expected", "FG% above expected")]
+    cards = [("Curry PAE", "Extra points vs an average shooter"), ("Curry PAE per 100", "Extra points per 100 shots"),
+             ("Curry Points per Shot", "Points Steph scored per shot"),
+             ("Curry Expected per Shot", "Points an average shooter would get per shot"),
+             ("Curry FG% Above Expected", "How much better he shoots than average")]
     cw = (W - 182 - 16 - 4 * 12) / 5
     for i, (m, lab) in enumerate(cards):
         v.append(card(f"c_card{i}", 182 + i * (cw + 12), 112, cw, 100, 20 + i, m, lab))
     v.append(visual("c_by_season", "clusteredColumnChart", 182, 224, 660, 268, z=30,
-                    title="Points above expected per 100 shots, by season",
+                    title="Extra points per 100 shots, season by season (above zero = better than average)",
                     roles={"Category": [proj(column("Season", "Season"))],
-                           "Y": [proj(measure("Curry PAE per 100"), "Per 100 shots")],
-                           "Tooltips": [proj(measure("Curry Shots"), "Shots"), proj(measure("Curry PAE"), "Points above expected")]},
+                           "Y": [proj(measure("Curry PAE per 100"), "Extra points per 100 shots")],
+                           "Tooltips": [proj(measure("Curry Shots"), "Shots"), proj(measure("Curry PAE"), "Extra points")]},
                     sort=[{"field": column("Season", "Season"), "direction": "Ascending"}],
                     objects={"dataPoint": [{"properties": {"fill": colour(ROYAL)}}],
                              "labels": [{"properties": {"show": lit(False)}}],
                              "valueAxis": [{"properties": {"gridlineShow": lit(True)}}]}))
     v.append(visual("c_by_zone", "clusteredBarChart", 854, 224, 410, 268, z=31,
-                    title="Per 100 shots, by court zone",
-                    roles={"Category": [proj(column("Curry Shot", "Zone"))],
-                           "Y": [proj(measure("Curry PAE per 100"), "Per 100 shots")],
-                           "Tooltips": [proj(measure("Curry Shots"), "Shots"), proj(measure("Curry FG%"), "FG%"),
-                                        proj(measure("Curry Expected FG%"), "Expected FG%")]},
+                    title="Where on the court he beats the average shooter",
+                    roles={"Category": [proj(column("Curry Shot", "Zone"), "Spot on the court")],
+                           "Y": [proj(measure("Curry PAE per 100"), "Extra points per 100 shots")],
+                           "Tooltips": [proj(measure("Curry Shots"), "Shots"), proj(measure("Curry FG%"), "Steph made"),
+                                        proj(measure("Curry Expected FG%"), "An average shooter would make")]},
                     sort=[{"field": measure("Curry PAE per 100"), "direction": "Descending"}],
                     objects={"dataPoint": [{"properties": {"fill": colour(ORANGE)}}],
                              "labels": [{"properties": {"show": lit(True), "color": colour(INK)}}]}))
     v.append(visual("c_table", "tableEx", 182, 504, 1082, 200, z=32, title="Season by season",
                     roles={"Values": [proj(column("Season", "Season")), proj(measure("Curry Shots"), "Shots"),
-                                      proj(measure("Curry 3PA Share"), "Share 3PA"), proj(measure("Curry FG%"), "FG%"),
-                                      proj(measure("Curry Expected FG%"), "Expected FG%"),
-                                      proj(measure("Curry Expected per Shot"), "Expected per shot"),
-                                      proj(measure("Curry Points per Shot"), "Points per shot"),
-                                      proj(measure("Curry PAE"), "Points above expected"),
-                                      proj(measure("Curry PAE per 100"), "Per 100 shots")]},
+                                      proj(measure("Curry 3PA Share"), "Share that were threes"),
+                                      proj(measure("Curry FG%"), "Steph made"),
+                                      proj(measure("Curry Expected FG%"), "Average shooter would make"),
+                                      proj(measure("Curry Points per Shot"), "His points per shot"),
+                                      proj(measure("Curry Expected per Shot"), "Average shooter's points per shot"),
+                                      proj(measure("Curry PAE"), "Extra points"),
+                                      proj(measure("Curry PAE per 100"), "Extra per 100 shots")]},
                     sort=[{"field": column("Season", "Season"), "direction": "Ascending"}],
                     objects={"columnHeaders": [{"properties": {"backColor": colour(NAVY), "fontColor": colour("#FFFFFF"),
                                                                "bold": lit(True)}}],
@@ -200,13 +203,13 @@ def page_career():
 
 
 def page_shots():
-    v = banner("s_", "Every regular-season shot on the court. Filter by season, result or zone; hover a dot for details.")
+    v = banner("s_", "Every shot Steph took. Pick a season, makes or misses, or a spot on the court; hover a dot for details.")
     v.append(season_slicer("s_season", 16, 112, 150, 380, 10))
-    v.append(visual("s_result", "slicer", 16, 504, 150, 96, z=11, title="Result",
+    v.append(visual("s_result", "slicer", 16, 504, 150, 96, z=11, title="Made or missed",
                     roles={"Values": [proj(column("Curry Shot", "Result"))]},
                     objects={"data": [{"properties": {"mode": lit("Basic")}}],
                              "header": [{"properties": {"show": lit(False)}}]}))
-    v.append(visual("s_zone", "slicer", 16, 612, 150, 92, z=12, title="Zone",
+    v.append(visual("s_zone", "slicer", 16, 612, 150, 92, z=12, title="Spot on the court",
                     roles={"Values": [proj(column("Curry Shot", "Zone"))]},
                     objects={"data": [{"properties": {"mode": lit("Dropdown")}}],
                              "header": [{"properties": {"show": lit(False)}}]}))
@@ -216,10 +219,10 @@ def page_shots():
                            "X": [proj(summed("Curry Shot", "Court X"), "Court X")],
                            "Y": [proj(summed("Curry Shot", "Court Y"), "Court Y")],
                            "Series": [proj(column("Curry Shot", "Result"))],
-                           "Tooltips": [proj(column("Curry Shot", "Game Date")),
-                                        proj(column("Curry Shot", "Distance (ft)")),
-                                        proj(column("Curry Shot", "Zone")),
-                                        proj(column("Curry Shot", "Make Probability"))]},
+                           "Tooltips": [proj(column("Curry Shot", "Game Date"), "Game date"),
+                                        proj(column("Curry Shot", "Distance (ft)"), "Feet from the basket"),
+                                        proj(column("Curry Shot", "Zone"), "Spot on the court"),
+                                        proj(column("Curry Shot", "Make Probability"), "An average shooter makes this")]},
                     objects={
                         "categoryAxis": [{"properties": {"show": lit(False), "start": lit(-250), "end": lit(250),
                                                          "gridlineShow": lit(False)}}],
@@ -237,46 +240,49 @@ def page_shots():
                         "markerShape": [{"properties": {"markerSize": lit(1)}}],
                     },
                     cobjects=container(None, background=True)))
-    side = [("Curry Shots", "Shots"), ("Curry FG%", "FG%"), ("Curry Expected FG%", "Expected FG% (average shooter)"),
-            ("Curry PAE", "Points above expected")]
+    side = [("Curry Shots", "Shots taken"), ("Curry FG%", "Steph made"),
+            ("Curry Expected FG%", "An average shooter would make"),
+            ("Curry PAE", "Extra points vs an average shooter")]
     for i, (m, lab) in enumerate(side):
         v.append(card(f"s_card{i}", 838, 112 + i * 112, 426, 100, 30 + i, m, lab))
     v.append(visual("s_note", "textbox", 838, 560, 426, 144, z=40,
                     objects={"general": [{"properties": {"paragraphs": [
                         {"textRuns": [{"value": "How to read this", "textStyle": {"fontWeight": "bold", "color": NAVY}}]},
-                        {"textRuns": [{"value": "Expected FG% is what an average NBA shooter that season would make "
-                                                "from exactly these spots. Every shot was scored by a model that never "
-                                                "saw that season. Power BI shows up to 10,000 dots at once, so pick a "
-                                                "few seasons to see every shot.", "textStyle": {"color": MUTED}}]}]}}]}))
+                        {"textRuns": [{"value": "A computer program learned how often an average NBA player makes a "
+                                                "shot from each spot. It never got to peek at the season it was "
+                                                "judging. Extra points = what Steph scored minus what an average "
+                                                "shooter would have scored from the same shots. Power BI shows up to "
+                                                "10,000 dots at once, so pick a few seasons to see every shot.",
+                                       "textStyle": {"color": MUTED}}]}]}}]}))
     return "shots", "Shot chart", v
 
 
 def page_league():
-    v = banner("l_", "Every NBA shooter since 2009-10. Who makes more than their shots are worth?")
+    v = banner("l_", "The whole NBA since 2009-10: who scores the most extra points from their shots?")
     v.append(season_slicer("l_season", 16, 112, 150, 440, 10))
-    v.append(visual("l_minshots", "slicer", 16, 564, 150, 140, z=11, title="Minimum shots",
-                    roles={"Values": [proj(column("Min Shots", "Value"), "Minimum shots")]},
+    v.append(visual("l_minshots", "slicer", 16, 564, 150, 140, z=11, title="Only players with at least … shots",
+                    roles={"Values": [proj(column("Min Shots", "Value"), "Shots")]},
                     objects={"data": [{"properties": {"mode": lit("Dropdown")}}],
                              "selection": [{"properties": {"singleSelect": lit(True)}}],
                              "header": [{"properties": {"show": lit(False)}}]}))
-    v.append(visual("l_table", "tableEx", 182, 112, 700, 592, z=20, title="Leaderboard: points above expected",
+    v.append(visual("l_table", "tableEx", 182, 112, 700, 592, z=20, title="Leaderboard: extra points vs an average shooter",
                     roles={"Values": [proj(column("Player", "Player")), proj(measure("Shots")),
-                                      proj(measure("Expected per Shot"), "Expected per shot"),
-                                      proj(measure("Points per Shot"), "Points per shot"),
-                                      proj(measure("Ranked PAE"), "Points above expected"),
-                                      proj(measure("PAE per 100"), "Per 100"),
+                                      proj(measure("Points per Shot"), "His points per shot"),
+                                      proj(measure("Expected per Shot"), "Average shooter's"),
+                                      proj(measure("Ranked PAE"), "Extra points"),
+                                      proj(measure("PAE per 100"), "Extra per 100"),
                                       proj(measure("PAE Rank"), "Rank")]},
                     sort=[{"field": measure("Ranked PAE"), "direction": "Descending"}],
                     objects={"columnHeaders": [{"properties": {"backColor": colour(NAVY), "fontColor": colour("#FFFFFF"),
                                                                "bold": lit(True)}}],
                              "values": [{"properties": {"backColorSecondary": colour("#f3f6fc")}}]}))
     v.append(visual("l_scatter", "scatterChart", 894, 112, 370, 592, z=21,
-                    title="Shot quality (x) vs points per shot (y). Hover for names",
+                    title="Hard shots (left) vs points scored (up). Hover for names",
                     roles={"Category": [proj(column("Player", "Player"))],
-                           "X": [proj(measure("Ranked Expected per Shot"), "Expected per shot")],
-                           "Y": [proj(measure("Ranked Points per Shot"), "Points per shot")],
+                           "X": [proj(measure("Ranked Expected per Shot"), "Average shooter's points per shot")],
+                           "Y": [proj(measure("Ranked Points per Shot"), "His points per shot")],
                            "Size": [proj(measure("Shots"))],
-                           "Tooltips": [proj(measure("Ranked PAE"), "Points above expected"),
+                           "Tooltips": [proj(measure("Ranked PAE"), "Extra points"),
                                         proj(measure("Rank Label"), "Rank")]},
                     objects={"dataPoint": [{"properties": {"fill": colour(ROYAL)}}],
                              "categoryLabels": [{"properties": {"show": lit(False)}}]}))

@@ -57,7 +57,7 @@
               },
               "queryRef": "Metrics.Curry 3PA Share",
               "nativeQueryRef": "Curry 3PA Share",
-              "displayName": "Share 3PA"
+              "displayName": "Share that were threes"
             },
             {
               "field": {
@@ -72,7 +72,7 @@
               },
               "queryRef": "Metrics.Curry FG%",
               "nativeQueryRef": "Curry FG%",
-              "displayName": "FG%"
+              "displayName": "Steph made"
             },
             {
               "field": {
@@ -87,22 +87,7 @@
               },
               "queryRef": "Metrics.Curry Expected FG%",
               "nativeQueryRef": "Curry Expected FG%",
-              "displayName": "Expected FG%"
-            },
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "Metrics"
-                    }
-                  },
-                  "Property": "Curry Expected per Shot"
-                }
-              },
-              "queryRef": "Metrics.Curry Expected per Shot",
-              "nativeQueryRef": "Curry Expected per Shot",
-              "displayName": "Expected per shot"
+              "displayName": "Average shooter would make"
             },
             {
               "field": {
@@ -117,7 +102,22 @@
               },
               "queryRef": "Metrics.Curry Points per Shot",
               "nativeQueryRef": "Curry Points per Shot",
-              "displayName": "Points per shot"
+              "displayName": "His points per shot"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Metrics"
+                    }
+                  },
+                  "Property": "Curry Expected per Shot"
+                }
+              },
+              "queryRef": "Metrics.Curry Expected per Shot",
+              "nativeQueryRef": "Curry Expected per Shot",
+              "displayName": "Average shooter's points per shot"
             },
             {
               "field": {
@@ -132,7 +132,7 @@
               },
               "queryRef": "Metrics.Curry PAE",
               "nativeQueryRef": "Curry PAE",
-              "displayName": "Points above expected"
+              "displayName": "Extra points"
             },
             {
               "field": {
@@ -147,7 +147,7 @@
               },
               "queryRef": "Metrics.Curry PAE per 100",
               "nativeQueryRef": "Curry PAE per 100",
-              "displayName": "Per 100 shots"
+              "displayName": "Extra per 100 shots"
             }
           ]
         }

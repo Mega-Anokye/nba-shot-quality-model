@@ -167,11 +167,11 @@ def plot_curry(curry: pd.DataFrame, path) -> None:
 
     ax.set_xticks(x)
     ax.set_xticklabels(curry["SEASON"], rotation=45, ha="right", color=MUTED, fontsize=8.5)
-    ax.set_ylabel("Points above expected per 100 shots", color=INK_2)
-    ax.set_title("Stephen Curry: points above an average shooter that season, taking the same shots",
+    ax.set_ylabel("Extra points per 100 shots", color=INK_2)
+    ax.set_title("Steph Curry: extra points per 100 shots vs an average NBA shooter taking the same shots",
                  color=INK, fontsize=11.5, loc="left", pad=22)
-    ax.text(0, 1.02, "Every shot scored by a model that never saw that season. "
-                     "#1 = best in the NBA that season (min 500 shots). Grey = fewer than 500 shots.",
+    ax.text(0, 1.02, "Above zero = better than average. #1 = best in the NBA that season. "
+                     "Grey = he played very few games that year.",
             transform=ax.transAxes, color=MUTED, fontsize=8.5)
     ax.set_ylim(min(-9, np.nanmin(vals) - 1.5), np.nanmax(vals) + 4)
     ax.grid(axis="y", color=GRID, lw=0.6, zorder=0)

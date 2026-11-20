@@ -28,7 +28,7 @@
               },
               "queryRef": "Min Shots.Value",
               "nativeQueryRef": "Value",
-              "displayName": "Minimum shots"
+              "displayName": "Shots"
             }
           ]
         }
@@ -89,7 +89,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Minimum shots'"
+                  "Value": "'Only players with at least … shots'"
                 }
               }
             },

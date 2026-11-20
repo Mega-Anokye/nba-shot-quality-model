@@ -19,10 +19,11 @@
               {
                 "textRuns": [
                   {
-                    "value": "Stephen Curry: shot quality vs shot making",
+                    "value": "“Steph Curry is the greatest shooter God ever created.”",
                     "textStyle": {
-                      "fontSize": "22pt",
+                      "fontSize": "20pt",
                       "fontWeight": "bold",
+                      "fontStyle": "italic",
                       "color": "#FFFFFF"
                     }
                   }
@@ -31,7 +32,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "Points above an average shooter that season, from the same shots  ·  2009-10 to 2025-26",
+                    "value": "Extra points Steph scored compared with an average NBA shooter taking the exact same shots  ·  2009-10 to 2025-26",
                     "textStyle": {
                       "fontSize": "11pt",
                       "color": "#FFC72C"

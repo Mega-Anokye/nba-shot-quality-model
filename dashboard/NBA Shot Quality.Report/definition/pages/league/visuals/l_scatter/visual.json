@@ -46,7 +46,7 @@
               },
               "queryRef": "Metrics.Ranked Expected per Shot",
               "nativeQueryRef": "Ranked Expected per Shot",
-              "displayName": "Expected per shot"
+              "displayName": "Average shooter's points per shot"
             }
           ]
         },
@@ -65,7 +65,7 @@
               },
               "queryRef": "Metrics.Ranked Points per Shot",
               "nativeQueryRef": "Ranked Points per Shot",
-              "displayName": "Points per shot"
+              "displayName": "His points per shot"
             }
           ]
         },
@@ -102,7 +102,7 @@
               },
               "queryRef": "Metrics.Ranked PAE",
               "nativeQueryRef": "Ranked PAE",
-              "displayName": "Points above expected"
+              "displayName": "Extra points"
             },
             {
               "field": {
@@ -169,7 +169,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Shot quality (x) vs points per shot (y). Hover for names'"
+                  "Value": "'Hard shots (left) vs points scored (up). Hover for names'"
                 }
               }
             },

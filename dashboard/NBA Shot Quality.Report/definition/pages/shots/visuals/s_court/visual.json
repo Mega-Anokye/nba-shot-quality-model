@@ -111,7 +111,8 @@
                 }
               },
               "queryRef": "Curry Shot.Game Date",
-              "nativeQueryRef": "Game Date"
+              "nativeQueryRef": "Game Date",
+              "displayName": "Game date"
             },
             {
               "field": {
@@ -125,7 +126,8 @@
                 }
               },
               "queryRef": "Curry Shot.Distance (ft)",
-              "nativeQueryRef": "Distance (ft)"
+              "nativeQueryRef": "Distance (ft)",
+              "displayName": "Feet from the basket"
             },
             {
               "field": {
@@ -139,7 +141,8 @@
                 }
               },
               "queryRef": "Curry Shot.Zone",
-              "nativeQueryRef": "Zone"
+              "nativeQueryRef": "Zone",
+              "displayName": "Spot on the court"
             },
             {
               "field": {
@@ -153,7 +156,8 @@
                 }
               },
               "queryRef": "Curry Shot.Make Probability",
-              "nativeQueryRef": "Make Probability"
+              "nativeQueryRef": "Make Probability",
+              "displayName": "An average shooter makes this"
             }
           ]
         }

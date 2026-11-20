@@ -28,7 +28,7 @@
               },
               "queryRef": "Metrics.Curry Shots",
               "nativeQueryRef": "Curry Shots",
-              "displayName": "Shots"
+              "displayName": "Shots taken"
             }
           ]
         }

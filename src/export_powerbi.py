@@ -22,14 +22,14 @@ from nba_common import DB_PATH, ROOT
 OUT = ROOT / "dashboard" / "data"
 CURRY_ID = 201939
 
-ZONE_GROUP = {
-    "Above the Break 3": "Above-break 3",
-    "Left Corner 3": "Corner 3",
-    "Right Corner 3": "Corner 3",
-    "Mid-Range": "Mid-range",
-    "Restricted Area": "Restricted area",
-    "In The Paint (Non-RA)": "Paint (non-RA)",
-    "Backcourt": "Backcourt",
+ZONE_GROUP = {   # plain names an average fan recognises
+    "Above the Break 3": "Three (top of the arc)",
+    "Left Corner 3": "Three (corner)",
+    "Right Corner 3": "Three (corner)",
+    "Mid-Range": "Mid-range jumper",
+    "Restricted Area": "At the rim",
+    "In The Paint (Non-RA)": "In the paint",
+    "Backcourt": "Half-court heave",
 }
 
 
