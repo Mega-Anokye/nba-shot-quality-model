@@ -158,7 +158,9 @@ const pct = v => (100 * v).toFixed(1) + "%";
 let S, L;                         // Curry shots, league player-seasons
 const state = { seasons: new Set(), result: "All", zone: "All" };
 
-Promise.all([fetch("data/curry_shots.json").then(r => r.json()), fetch("data/player_seasons.json").then(r => r.json())])
+const DATA_VERSION = "2026-11-20b";   // change when the data files change, so browsers fetch the new copy
+Promise.all([fetch(`data/curry_shots.json?v=${DATA_VERSION}`).then(r => r.json()),
+             fetch(`data/player_seasons.json?v=${DATA_VERSION}`).then(r => r.json())])
   .then(([s, l]) => { S = s; L = l; init(); })
   .catch(e => { document.querySelector("main").insertAdjacentHTML("afterbegin", `<p class="callout">Could not load data: ${e}</p>`); });
 
